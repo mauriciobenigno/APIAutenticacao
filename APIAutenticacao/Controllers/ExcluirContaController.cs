@@ -14,15 +14,16 @@ namespace APIAutenticacao.Controllers
     public class ExcluirContaController : Controller
     {
         NetCoreAutenticacaoContext netCoreAutenticacaoContext = new NetCoreAutenticacaoContext();
-        // DELETE api/<controller>/5
-        [HttpDelete("{id}")]
-        public string Delete([FromBody]DbConta value)
+        // POST api/<controller>
+        [HttpPost]
+        public string Post([FromBody]DbConta value)
         {
             // Verificiando se a conta existe
-            if (netCoreAutenticacaoContext.DbConta.Any(usuario => usuario.Usuario.Equals(value.Usuario)))
+            if (netCoreAutenticacaoContext.DbConta.Find(value.Usuario)!=null)// Usuario existe
             {
-                DbConta conta = netCoreAutenticacaoContext.DbConta.Where(usuario => usuario.Usuario.Equals(value.Usuario)).First();
+                DbConta conta = netCoreAutenticacaoContext.DbConta.Find(value.Usuario);
                 netCoreAutenticacaoContext.DbConta.Remove(conta);
+                netCoreAutenticacaoContext.SaveChanges();
                 return JsonConvert.SerializeObject("DELCONTA");
             }
             else
